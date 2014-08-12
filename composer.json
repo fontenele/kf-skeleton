@@ -13,7 +13,6 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "kf/kf": "dev-master"
+        "php": ">=5.3.0"
     }
 }
