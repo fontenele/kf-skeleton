@@ -1,4 +1,4 @@
-kf-skeleton
-===========
+KF
+=========
 
-KF Project Skeleton
+PHP Framework

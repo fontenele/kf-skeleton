@@ -1,0 +1,19 @@
+{
+    "name": "kf/kf-skeleton",
+    "description": "Project Skeleton from KF PHP Framework",
+    "keywords": ["kf", "php", "framework"],
+    "homepage": "https://github.com/fontenele/kf-skeleton",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Guilherme Fontenele",
+            "email": "guilherme@fontenele.net",
+            "homepage": "http://guilherme.fontenele.net",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "kf/kf": "dev-master"
+    }
+}
