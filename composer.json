@@ -15,6 +15,6 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "kf/kf": "dev-master"
+        "kf/kf": "1.0.0"
     }
 }
