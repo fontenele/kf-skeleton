@@ -14,7 +14,7 @@
         }
     ],
     "require-dev": {
-        "kf/kf": "*"
+        "kf/kf": "dev-master"
     },
     "require": {
         "php": ">=5.3.0"
