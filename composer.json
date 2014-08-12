@@ -1,6 +1,6 @@
 {
     "name": "kf/kf-skeleton",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "Project Skeleton from KF PHP Framework",
     "keywords": ["kf", "php", "framework"],
     "homepage": "https://github.com/fontenele/kf-skeleton",
@@ -13,7 +13,7 @@
             "role": "Developer"
         }
     ],
-    "require": {
-        "monolog/monolog": "1.10.0"
+    "require-dev": {
+        "monolog/monolog": "*"
     }
 }
