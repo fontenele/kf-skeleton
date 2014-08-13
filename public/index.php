@@ -92,6 +92,7 @@ class Kernel {
 
     public static function setConstants() {
         define('APP_PATH', dirname(__DIR__) . '/');
+        define('VENDOR_PATH', dirname(__DIR__) . '/vendor/');
         define('PUBLIC_PATH', dirname(__DIR__) . '/public/');
         define('TMP_PATH', dirname(__DIR__) . '/public/tmp/');
         define('LOG_PATH', dirname(__DIR__) . '/logs/');
@@ -101,6 +102,8 @@ class Kernel {
     public static function loadLibs() {
         try {
             require_once('vendor/autoload.php');
+            require_once(VENDOR_PATH . 'kf/kf/src/Kf/fdebug.php');
+            require_once(VENDOR_PATH . 'kf/kf/src/Kf/System/Exceptions.php');
         } catch (\Exception $ex) {
             throw $ex;
         }
