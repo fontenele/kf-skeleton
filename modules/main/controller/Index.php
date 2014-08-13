@@ -2,7 +2,7 @@
 
 namespace Main\Controller;
 
-Class Index extends \KF\Lib\Module\Controller {
+Class Index extends \Kf\Module\Controller {
 
     public function index() {
         try {

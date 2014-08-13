@@ -2,7 +2,7 @@
 
 namespace Admin\Controller;
 
-class Database extends \KF\Lib\Module\Controller {
+class Database extends \Kf\Module\Controller {
 
     public function init() {
         
@@ -36,7 +36,7 @@ class Database extends \KF\Lib\Module\Controller {
                     }
                 }
                 
-                \KF\Lib\System\Messenger::success("Tabelas criadas com sucesso.");
+                \Kf\System\Messenger::success("Tabelas criadas com sucesso.");
                 $this->redirect('admin/index/index');
             }
             

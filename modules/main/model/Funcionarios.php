@@ -2,7 +2,7 @@
 
 namespace Main\Model;
 
-class Funcionarios extends \KF\Lib\Module\Model {
+class Funcionarios extends \Kf\Module\Model {
 
     public function __construct() {
         $this->_table = 'public.funcionarios';

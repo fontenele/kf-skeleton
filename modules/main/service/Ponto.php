@@ -2,7 +2,7 @@
 
 namespace Main\Service;
 
-class Ponto extends \KF\Lib\Module\Service {
+class Ponto extends \Kf\Module\Service {
 
     public function __construct() {
         $this->_model = '\Main\Model\Ponto';
@@ -30,10 +30,10 @@ class Ponto extends \KF\Lib\Module\Service {
             $domingos = [];
             $feriados = [];
             foreach($pontoDeUnicoFuncionario as $ponto) {
-                if(\KF\DataType\Time::isSaturday($ponto['dia'], $folha['mes'], $folha['ano'])) {
+                if(\Kf\DataType\Time::isSaturday($ponto['dia'], $folha['mes'], $folha['ano'])) {
                     $sabados[] = $ponto['dia'];
                 }
-                if(\KF\DataType\Time::isSunday($ponto['dia'], $folha['mes'], $folha['ano'])) {
+                if(\Kf\DataType\Time::isSunday($ponto['dia'], $folha['mes'], $folha['ano'])) {
                     $domingos[] = $ponto['dia'];
                 }
                 $dias[] = $ponto['dia'];

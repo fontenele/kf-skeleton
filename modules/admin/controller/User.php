@@ -2,7 +2,7 @@
 
 namespace Admin\Controller;
 
-class User extends \KF\Lib\Module\Controller {
+class User extends \Kf\Module\Controller {
 
     public function newItem() {
         try {
@@ -29,10 +29,10 @@ class User extends \KF\Lib\Module\Controller {
             $success = $service->save($row);
             // Set alert message and redirect
             if ($success) {
-                \KF\Lib\System\Messenger::success("Usuário {$row['name']} salvo com sucesso.");
+                \Kf\System\Messenger::success("Usuário {$row['name']} salvo com sucesso.");
                 $this->redirect('admin/user/list-items');
             } else {
-                \KF\Lib\System\Messenger::error("Erro ao tentar salvar usuário {$row['name']}.");
+                \Kf\System\Messenger::error("Erro ao tentar salvar usuário {$row['name']}.");
                 $this->redirect('admin/user/new-item');
             }
         } catch (\Exception $ex) {
@@ -44,11 +44,11 @@ class User extends \KF\Lib\Module\Controller {
         try {
             $service = new \Admin\Service\User(); // Service
             // Datagrid
-            $dg = new \KF\Lib\View\Html\Datagrid\Datagrid('dg-user');
+            $dg = new \Kf\View\Html\Datagrid\Datagrid('dg-user');
             $dg->setEntity(new \Admin\Entity\User);
-            $dg->getHeader(3)->setRenderer(new \KF\Lib\View\Html\Renderer('\Admin\Controller\User::dgGrupo')); //@TODO REMOVER ISSO, FAZER AUTOMATICO
-            $dg->addHeader(\KF\Lib\View\Html\Datagrid\Header::create(3, '', '2%', 'text-center', new \KF\Lib\View\Html\Renderer('\Admin\Controller\User::dgEdit')));
-            $dg->addHeader(\KF\Lib\View\Html\Datagrid\Header::create(4, '', '2%', 'text-center', new \KF\Lib\View\Html\Renderer('\Admin\Controller\User::dgDelete')));
+            $dg->getHeader(3)->setRenderer(new \Kf\View\Html\Renderer('\Admin\Controller\User::dgGrupo')); //@TODO REMOVER ISSO, FAZER AUTOMATICO
+            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(3, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\User::dgEdit')));
+            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(4, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\User::dgDelete')));
             $dg->setData($service->fetchAll($this->request->post->getArrayCopy(), $dg->getPaginator()->getRowsPerPage(), $dg->getPaginator()->getActive()));
             $this->view->dg = $dg;
             // Render HTML
@@ -64,7 +64,7 @@ class User extends \KF\Lib\Module\Controller {
      * @return string
      */
     public static function dgGrupo($row) {
-        $basePath = \KF\Kernel::$router->basePath;
+        $basePath = \Kf\Kernel::$router->basePath;
         return "<a href='{$basePath}admin/user-group/new-item/cod/{$row['user_group']}'>{$row['user_group_name']}</a>";
     }
 
@@ -74,7 +74,7 @@ class User extends \KF\Lib\Module\Controller {
      * @return string
      */
     public static function dgStatus($row) {
-        return $row['status'] == 1 ? '<span title="Ativo">' . \KF\Lib\View\Html\Helper\Glyphicon::get('ok-circle text-success') . '</span>' : '<span title="Inativo">' . \KF\Lib\View\Html\Helper\Glyphicon::get('ban-circle text-danger') . '</span>';
+        return $row['status'] == 1 ? '<span title="Ativo">' . \Kf\View\Html\Helper\Glyphicon::get('ok-circle text-success') . '</span>' : '<span title="Inativo">' . \Kf\View\Html\Helper\Glyphicon::get('ban-circle text-danger') . '</span>';
     }
 
     /**
@@ -83,7 +83,7 @@ class User extends \KF\Lib\Module\Controller {
      * @return string
      */
     public static function dgEdit($row) {
-        return '<a title="Editar usuário" href=' . \KF\Kernel::$router->basePath . "admin/user/new-item/cod/{$row['cod']}>" . \KF\Lib\View\Html\Helper\Glyphicon::get('folder-open') . '</a>';
+        return '<a title="Editar usuário" href=' . \Kf\Kernel::$router->basePath . "admin/user/new-item/cod/{$row['cod']}>" . \Kf\View\Html\Helper\Glyphicon::get('folder-open') . '</a>';
     }
 
     /**
@@ -92,7 +92,7 @@ class User extends \KF\Lib\Module\Controller {
      * @return string
      */
     public static function dgDelete($row) {
-        return '<a class="text-danger" title="Excluir usuário" data-confirmation data-placement="left" href="' . \KF\Kernel::$router->basePath . "admin/user/delete-item/cod/{$row['cod']}\">" . \KF\Lib\View\Html\Helper\Glyphicon::get('remove-sign') . '</a>';
+        return '<a class="text-danger" title="Excluir usuário" data-confirmation data-placement="left" href="' . \Kf\Kernel::$router->basePath . "admin/user/delete-item/cod/{$row['cod']}\">" . \Kf\View\Html\Helper\Glyphicon::get('remove-sign') . '</a>';
     }
 
     public function deleteItem() {
@@ -102,16 +102,16 @@ class User extends \KF\Lib\Module\Controller {
             $pk = $entity->getPrimaryKey(); // Primary Key
             // Return if primary key wasnt setted
             if (!$this->request->get->$pk) {
-                \KF\Lib\System\Messenger::error("Erro ao tentar excluir usuário pois nenhum usuário foi informado.");
+                \Kf\System\Messenger::error("Erro ao tentar excluir usuário pois nenhum usuário foi informado.");
                 $this->redirect('admin/user/list-items');
             }
             // Delete item
             $success = $service->delete($this->request->get->getArrayCopy());
             // Set alert message
             if ($success) {
-                \KF\Lib\System\Messenger::success("Usuário excluído com sucesso.");
+                \Kf\System\Messenger::success("Usuário excluído com sucesso.");
             } else {
-                \KF\Lib\System\Messenger::error("Erro ao tentar excluir usuário.");
+                \Kf\System\Messenger::error("Erro ao tentar excluir usuário.");
             }
             // Redirect
             $this->redirect('admin/user/list-items');

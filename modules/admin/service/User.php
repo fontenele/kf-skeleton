@@ -2,7 +2,7 @@
 
 namespace Admin\Service;
 
-class User extends \KF\Lib\Module\Service {
+class User extends \Kf\Module\Service {
 
     public function __construct() {
         $this->_model = '\Admin\Model\User';
@@ -24,7 +24,7 @@ class User extends \KF\Lib\Module\Service {
 
     public static function identity() {
         try {
-            $session = new \KF\Lib\System\Session('system');
+            $session = new \Kf\System\Session('system');
             return $session->identity;
         } catch (\Exception $ex) {
             throw $ex;

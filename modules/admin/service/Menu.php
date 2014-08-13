@@ -2,7 +2,7 @@
 
 namespace Admin\Service;
 
-class Menu extends \KF\Lib\Module\Service {
+class Menu extends \Kf\Module\Service {
 
     /**
      * @var MenuItem

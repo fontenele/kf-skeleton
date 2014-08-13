@@ -2,7 +2,7 @@
 
 namespace Main\Model;
 
-class Folha extends \KF\Lib\Module\Model {
+class Folha extends \Kf\Module\Model {
     
     const STATUS_ABERTA = 1;
     const STATUS_FECHADA = 2;

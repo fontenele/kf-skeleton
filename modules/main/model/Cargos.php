@@ -2,7 +2,7 @@
 
 namespace Main\Model;
 
-class Cargos extends \KF\Lib\Module\Model {
+class Cargos extends \Kf\Module\Model {
 
     public function __construct() {
         $this->_table = 'public.cargo';

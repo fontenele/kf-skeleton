@@ -2,7 +2,7 @@
 
 namespace Admin\Model;
 
-class User extends \KF\Lib\Module\Model {
+class User extends \Kf\Module\Model {
 
     public function configure() {
         $this->setEntity(new \Admin\Entity\User);
@@ -18,7 +18,7 @@ class User extends \KF\Lib\Module\Model {
         $dml = $this->getEntity()
                 ->select()
                 ->from()
-                ->where(['email' => [$email, \KF\Lib\Database\Criteria::CONDITION_EQUAL], 'password' => $password]);
+                ->where(['email' => [$email, \Kf\Database\Criteria::CONDITION_EQUAL], 'password' => $password]);
         return $this->fetchBySql($dml->query, $dml->input);
     }
 

@@ -2,7 +2,7 @@
 
 namespace Admin\Controller;
 
-class Index extends \KF\Lib\Module\Controller {
+class Index extends \Kf\Module\Controller {
 
     public function init() {
         
@@ -18,8 +18,8 @@ class Index extends \KF\Lib\Module\Controller {
 
     public function error404() {
         try {
-            $this->view->template = 'public/themes/' . \KF\Kernel::$config['system']['view']['theme'] . '/view/' . \KF\Kernel::$config['system']['view']['error404'];
-            $this->view->config = \KF\Kernel::$config;
+            $this->view->template = 'public/themes/' . \Kf\Kernel::$config['system']['view']['theme'] . '/view/' . \Kf\Kernel::$config['system']['view']['error404'];
+            $this->view->config = \Kf\Kernel::$config;
             return $this->view;
         } catch (\Exception $ex) {
             throw $ex;
@@ -28,8 +28,8 @@ class Index extends \KF\Lib\Module\Controller {
     
     public function errorDefault() {
         try {
-            $this->view->template = 'public/themes/' . \KF\Kernel::$config['system']['view']['theme'] . '/view/' . \KF\Kernel::$config['system']['view']['errorDefault'];
-            $this->view->config = \KF\Kernel::$config;
+            $this->view->template = 'public/themes/' . \Kf\Kernel::$config['system']['view']['theme'] . '/view/' . \Kf\Kernel::$config['system']['view']['errorDefault'];
+            $this->view->config = \Kf\Kernel::$config;
             return $this->view;
         } catch (\Exception $ex) {
             throw $ex;

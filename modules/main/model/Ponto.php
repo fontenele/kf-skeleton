@@ -2,7 +2,7 @@
 
 namespace Main\Model;
 
-class Ponto extends \KF\Lib\Module\Model {
+class Ponto extends \Kf\Module\Model {
 
     public function __construct() {
         $this->_table = 'public.ponto';

@@ -2,7 +2,7 @@
 
 namespace Admin\Entity;
 
-class AccessGroupAccess extends \KF\Lib\Module\Entity {
+class AccessGroupAccess extends \Kf\Module\Entity {
 
     public function configure($recursive) {
         $this->setTable('public.access_group_access'); // Table
@@ -12,27 +12,27 @@ class AccessGroupAccess extends \KF\Lib\Module\Entity {
         // Cod
         $this->addField(self::createField('cod')
                         ->setDbName('cod')
-                        ->setDbType(\KF\Lib\Database\Field::DB_TYPE_INTEGER)
-                        ->setViewComponent(\KF\Lib\View\Html\InputHidden::create('cod')));
+                        ->setDbType(\Kf\Database\Field::DB_TYPE_INTEGER)
+                        ->setViewComponent(\Kf\View\Html\InputHidden::create('cod')));
         // AccessGroup
         $this->addField(self::createField('access_group')
                         ->setDbName('access_group')
-                        ->setDbType(\KF\Lib\Database\Field::DB_TYPE_INTEGER)
+                        ->setDbType(\Kf\Database\Field::DB_TYPE_INTEGER)
                         ->setFkEntity(new \Admin\Entity\AccessGroup(false))
                         ->setFkEntityField('cod')
-                        ->setFkEntityJoinType(\KF\Lib\Database\Field::DB_JOIN_INNER)
-                        ->setDatagridHeader(\KF\Lib\View\Html\Datagrid\Header::create(1, 'Grupo', '45%'))
-                        ->setViewComponent(\KF\Lib\View\Html\Select::create('access_group', 'Grupo')
+                        ->setFkEntityJoinType(\Kf\Database\Field::DB_JOIN_INNER)
+                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(1, 'Grupo', '45%'))
+                        ->setViewComponent(\Kf\View\Html\Select::create('access_group', 'Grupo')
                                 ->setRequired(true)));
         // Access
         $this->addField(self::createField('access')
                         ->setDbName('access')
-                        ->setDbType(\KF\Lib\Database\Field::DB_TYPE_INTEGER)
+                        ->setDbType(\Kf\Database\Field::DB_TYPE_INTEGER)
                         ->setFkEntity(new \Admin\Entity\Access(false))
                         ->setFkEntityField('cod')
-                        ->setFkEntityJoinType(\KF\Lib\Database\Field::DB_JOIN_INNER)
-                        ->setDatagridHeader(\KF\Lib\View\Html\Datagrid\Header::create(2, 'Acesso', '45%'))
-                        ->setViewComponent(\KF\Lib\View\Html\Select::create('access', 'Acesso')
+                        ->setFkEntityJoinType(\Kf\Database\Field::DB_JOIN_INNER)
+                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(2, 'Acesso', '45%'))
+                        ->setViewComponent(\Kf\View\Html\Select::create('access', 'Acesso')
                                 ->setRequired(true)));
     }
 

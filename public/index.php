@@ -1,6 +1,6 @@
 <?php
 
-namespace KF;
+namespace Kf;
 
 class Kernel {
 
@@ -10,22 +10,22 @@ class Kernel {
     public static $config = [];
 
     /**
-     * @var Lib\View\Layout
+     * @var View\Layout
      */
     public static $layout;
 
     /**
-     * @var Lib\Http\Request
+     * @var Http\Request
      */
     public static $request;
 
     /**
-     * @var Lib\System\Router
+     * @var System\Router
      */
     public static $router;
 
     /**
-     * @var Lib\Database\Pdo
+     * @var Database\Pdo
      */
     public static $db;
 
@@ -48,15 +48,15 @@ class Kernel {
             if ($valid) {
                 self::run();
             }
-        } catch (Lib\System\Exception\ACLException $ex) {
+        } catch (System\Exception\ACLException $ex) {
 
-        } catch (Lib\System\Exception\DatabaseException $ex) {
+        } catch (System\Exception\DatabaseException $ex) {
 
-        } catch (Lib\System\Exception\RouterException $ex) {
+        } catch (System\Exception\RouterException $ex) {
 
         } catch (\Exception $ex) {
             if (isset(self::$config['system']['router']['error'][$ex->getCode()])) {
-                $session = new Lib\System\Session('errorInfo');
+                $session = new System\Session('errorInfo');
                 $session->info = [
                     'message' => $ex->getMessage(),
                     'file' => $ex->getFile(),
@@ -100,7 +100,7 @@ class Kernel {
 
     public static function loadLibs() {
         try {
-            require_once('lib/autoload.php');
+            require_once('vendor/autoload.php');
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -108,7 +108,7 @@ class Kernel {
 
     public static function loadConfigs() {
         try {
-            $dir = new Lib\System\Dir(APP_PATH . 'config');
+            $dir = new \Kf\System\Dir(APP_PATH . 'config');
             $envs = ['dev', 'hom', 'prod'];
             $filesIgnore = [];
 
@@ -120,23 +120,23 @@ class Kernel {
                     continue;
                 }
 
-                if (Lib\System\File::fileExists($filename, APPLICATION_ENV)) {
+                if (System\File::fileExists($filename, APPLICATION_ENV)) {
                     $filesIgnore[] = $filename;
-                    $filename = Lib\System\File::getFileName($filename, APPLICATION_ENV);
+                    $filename = System\File::getFileName($filename, APPLICATION_ENV);
                     $filesIgnore[] = $filename;
                 } else {
                     foreach ($envs as $env) {
                         if ($env == APPLICATION_ENV) {
                             continue;
                         }
-                        if (Lib\System\File::fileExists($filename, $env)) {
+                        if (System\File::fileExists($filename, $env)) {
                             $filesIgnore[] = $filename;
-                            $filesIgnore[] = Lib\System\File::getFileName($filename, $env);
+                            $filesIgnore[] = System\File::getFileName($filename, $env);
                         }
                     }
                 }
 
-                $config = Lib\System\File::loadFile($filename);
+                $config = System\File::loadFile($filename);
                 self::$config = array_merge_recursive(self::$config, $config);
             }
         } catch (\Exception $ex) {
@@ -146,7 +146,7 @@ class Kernel {
 
     public static function loadLogger() {
         try {
-            Lib\System\Logger::setDefaults();
+            System\Logger::setDefaults();
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -154,7 +154,7 @@ class Kernel {
 
     public static function loadRequest() {
         try {
-            self::$request = new Lib\Http\Request();
+            self::$request = new Http\Request();
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -162,7 +162,7 @@ class Kernel {
 
     public static function loadRouter() {
         try {
-            self::$router = new Lib\System\Router(self::$config['system']['router']);
+            self::$router = new System\Router(self::$config['system']['router']);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -173,7 +173,7 @@ class Kernel {
             if (isset(self::$config['db']['type'])) {
                 switch (self::$config['db']['type']) {
                     case 'pgsql':
-                        self::$db = new Lib\Database\Postgres(self::$config['db']);
+                        self::$db = new Database\Postgres(self::$config['db']);
                         break;
                 }
             }
@@ -185,7 +185,7 @@ class Kernel {
     public static function acl() {
         try {
             if (self::$config['system']['acl']['enabled']) {
-                $session = new Lib\System\Session('system');
+                $session = new System\Session('system');
                 if (!$session->offsetExists('identity')) {
                     self::$logged = false;
                     self::run(self::$router->defaultAuth);
@@ -227,9 +227,9 @@ class Kernel {
 
     public static function createLayout() {
         try {
-            self::$layout = new Lib\View\Layout('public/themes/' . self::$config['system']['view']['theme'] . '/view/' . self::$config['system']['view']['layout']);
-            self::$layout->success = Lib\System\Messenger::getSuccess();
-            self::$layout->error = Lib\System\Messenger::getError();
+            self::$layout = new View\Layout('public/themes/' . self::$config['system']['view']['theme'] . '/view/' . self::$config['system']['view']['layout']);
+            self::$layout->success = System\Messenger::getSuccess();
+            self::$layout->error = System\Messenger::getError();
             self::$layout->userLogged = self::$logged;
             self::$layout->config = self::$config;
             self::$layout->theme = self::$config['system']['view']['theme'];
@@ -244,9 +244,9 @@ class Kernel {
             self::createLayout();
 
             $arrController = explode('\\', $controller);
-            $_module = Lib\System\String::camelToDash($arrController[0]);
-            $_controller = Lib\System\String::camelToDash($arrController[2]);
-            $_action = Lib\System\String::camelToDash($action);
+            $_module = System\String::camelToDash($arrController[0]);
+            $_controller = System\String::camelToDash($arrController[2]);
+            $_action = System\String::camelToDash($action);
             $pathCssJs = "%s/modules/{$_module}/{$_controller}/{$_action}.%s";
 
             $js = array();
@@ -280,7 +280,7 @@ class Kernel {
 //            self::$layout->css = array_merge(self::$layout->css, $css);
 //            self::$layout->js = array_merge(self::$layout->js, $js);
 
-            if ($view instanceof Lib\View\Json) {
+            if ($view instanceof View\Json) {
                 // Render Json output
                 echo $view->render();
             } else {
@@ -297,4 +297,4 @@ class Kernel {
 
 }
 
-\KF\Kernel::app();
+\Kf\Kernel::app();

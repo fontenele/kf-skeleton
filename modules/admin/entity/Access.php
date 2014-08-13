@@ -2,7 +2,7 @@
 
 namespace Admin\Entity;
 
-class Access extends \KF\Lib\Module\Entity {
+class Access extends \Kf\Module\Entity {
 
     public function configure($recursive) {
         $this->setTable('public.access'); // Table
@@ -12,28 +12,28 @@ class Access extends \KF\Lib\Module\Entity {
         // Cod
         $this->addField(self::createField('cod')
                         ->setDbName('cod')
-                        ->setDbType(\KF\Lib\Database\Field::DB_TYPE_INTEGER)
-                        ->setViewComponent(\KF\Lib\View\Html\InputHidden::create('cod')));
+                        ->setDbType(\Kf\Database\Field::DB_TYPE_INTEGER)
+                        ->setViewComponent(\Kf\View\Html\InputHidden::create('cod')));
         // Key
         $this->addField(self::createField('key')
                         ->setDbName('key')
-                        ->setDbType(\KF\Lib\Database\Field::DB_TYPE_VARCHAR)
+                        ->setDbType(\Kf\Database\Field::DB_TYPE_VARCHAR)
                         ->setDbMaxLength(200)
                         ->setDbOrderBySequence(1)
                         ->setDbOrderBySortType('ASC')
-                        ->setSearchCriteria(\KF\Lib\Database\Criteria::create(\KF\Lib\Database\Criteria::CONDITION_LIKE))
-                        ->setDatagridHeader(\KF\Lib\View\Html\Datagrid\Header::create(1, 'Chave', '45%'))
-                        ->setViewComponent(\KF\Lib\View\Html\InputText::create('key', 'Chave')
+                        ->setSearchCriteria(\Kf\Database\Criteria::create(\Kf\Database\Criteria::CONDITION_LIKE))
+                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(1, 'Chave', '45%'))
+                        ->setViewComponent(\Kf\View\Html\InputText::create('key', 'Chave')
                                 ->setRequired(true)
                                 ->setPlaceholder('Nome da Chave de acesso')));
         // Description
         $this->addField(self::createField('description')
                         ->setDbName('description')
-                        ->setDbType(\KF\Lib\Database\Field::DB_TYPE_VARCHAR)
+                        ->setDbType(\Kf\Database\Field::DB_TYPE_VARCHAR)
                         ->setDbMaxLength(300)
-                        ->setSearchCriteria(\KF\Lib\Database\Criteria::create(\KF\Lib\Database\Criteria::CONDITION_LIKE))
-                        ->setDatagridHeader(\KF\Lib\View\Html\Datagrid\Header::create(1, 'Descrição', '45%'))
-                        ->setViewComponent(\KF\Lib\View\Html\InputText::create('description', 'Descrição')
+                        ->setSearchCriteria(\Kf\Database\Criteria::create(\Kf\Database\Criteria::CONDITION_LIKE))
+                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(1, 'Descrição', '45%'))
+                        ->setViewComponent(\Kf\View\Html\InputText::create('description', 'Descrição')
                                 ->setRequired(true)
                                 ->setPlaceholder('Descrição da Chave de acesso')));
     }

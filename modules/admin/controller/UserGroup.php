@@ -2,7 +2,7 @@
 
 namespace Admin\Controller;
 
-class UserGroup extends \KF\Lib\Module\Controller {
+class UserGroup extends \Kf\Module\Controller {
 
     public function newItem() {
         try {
@@ -27,10 +27,10 @@ class UserGroup extends \KF\Lib\Module\Controller {
             $success = $service->save($row);
             // Set alert message and redirect
             if ($success) {
-                \KF\Lib\System\Messenger::success("Grupo {$row['name']} salvo com sucesso.");
+                \Kf\System\Messenger::success("Grupo {$row['name']} salvo com sucesso.");
                 $this->redirect('admin/user-group/list-items');
             } else {
-                \KF\Lib\System\Messenger::error("Erro ao tentar salvar grupo {$row['name']}.");
+                \Kf\System\Messenger::error("Erro ao tentar salvar grupo {$row['name']}.");
                 $this->redirect('admin/user-group/new-item');
             }
         } catch (\Exception $ex) {
@@ -42,10 +42,10 @@ class UserGroup extends \KF\Lib\Module\Controller {
         try {
             $service = new \Admin\Service\UserGroup; // Service
             // Datagrid
-            $dg = new \KF\Lib\View\Html\Datagrid\Datagrid('dg-user-group');
+            $dg = new \Kf\View\Html\Datagrid\Datagrid('dg-user-group');
             $dg->setEntity(new \Admin\Entity\UserGroup);
-            $dg->addHeader(\KF\Lib\View\Html\Datagrid\Header::create(3, '', '2%', 'text-center', new \KF\Lib\View\Html\Renderer('\Admin\Controller\UserGroup::dgEdit')));
-            $dg->addHeader(\KF\Lib\View\Html\Datagrid\Header::create(4, '', '2%', 'text-center', new \KF\Lib\View\Html\Renderer('\Admin\Controller\UserGroup::dgDelete')));
+            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(3, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\UserGroup::dgEdit')));
+            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(4, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\UserGroup::dgDelete')));
             $dg->setData($service->fetchAll($this->request->post->getArrayCopy(), $dg->getPaginator()->getRowsPerPage(), $dg->getPaginator()->getActive()));
             $this->view->dg = $dg;
             // Render HTML
@@ -61,7 +61,7 @@ class UserGroup extends \KF\Lib\Module\Controller {
      * @return string
      */
     public static function dgStatus($row) {
-        return $row['status'] == 1 ? '<span title="Ativo">' . \KF\Lib\View\Html\Helper\Glyphicon::get('ok-circle text-success') . '</span>' : '<span title="Inativo">' . \KF\Lib\View\Html\Helper\Glyphicon::get('ban-circle text-danger') . '</span>';
+        return $row['status'] == 1 ? '<span title="Ativo">' . \Kf\View\Html\Helper\Glyphicon::get('ok-circle text-success') . '</span>' : '<span title="Inativo">' . \Kf\View\Html\Helper\Glyphicon::get('ban-circle text-danger') . '</span>';
     }
 
     /**
@@ -70,7 +70,7 @@ class UserGroup extends \KF\Lib\Module\Controller {
      * @return string
      */
     public static function dgEdit($row) {
-        return '<a title="Editar grupo" href=' . \KF\Kernel::$router->basePath . "admin/user-group/new-item/cod/{$row['cod']}>" . \KF\Lib\View\Html\Helper\Glyphicon::get('folder-open') . '</a>';
+        return '<a title="Editar grupo" href=' . \Kf\Kernel::$router->basePath . "admin/user-group/new-item/cod/{$row['cod']}>" . \Kf\View\Html\Helper\Glyphicon::get('folder-open') . '</a>';
     }
 
     /**
@@ -79,7 +79,7 @@ class UserGroup extends \KF\Lib\Module\Controller {
      * @return string
      */
     public static function dgDelete($row) {
-        return '<a class="text-danger" title="Excluir grupo" data-confirmation data-placement="left" href="' . \KF\Kernel::$router->basePath . "admin/user-group/delete-item/cod/{$row['cod']}\">" . \KF\Lib\View\Html\Helper\Glyphicon::get('remove-sign') . '</a>';
+        return '<a class="text-danger" title="Excluir grupo" data-confirmation data-placement="left" href="' . \Kf\Kernel::$router->basePath . "admin/user-group/delete-item/cod/{$row['cod']}\">" . \Kf\View\Html\Helper\Glyphicon::get('remove-sign') . '</a>';
     }
 
     public function deleteItem() {
@@ -89,16 +89,16 @@ class UserGroup extends \KF\Lib\Module\Controller {
             $pk = $entity->getPrimaryKey(); // Primary Key
             // Return if primary key wasnt setted
             if (!$this->request->get->$pk) {
-                \KF\Lib\System\Messenger::error("Erro ao tentar excluir grupo pois nenhum grupo foi informado.");
+                \Kf\System\Messenger::error("Erro ao tentar excluir grupo pois nenhum grupo foi informado.");
                 $this->redirect('admin/user-group/list-items');
             }
             // Delete item
             $success = $service->delete($this->request->get->getArrayCopy());
             // Set alert message
             if ($success) {
-                \KF\Lib\System\Messenger::success("Grupo excluído com sucesso.");
+                \Kf\System\Messenger::success("Grupo excluído com sucesso.");
             } else {
-                \KF\Lib\System\Messenger::error("Erro ao tentar excluir grupo.");
+                \Kf\System\Messenger::error("Erro ao tentar excluir grupo.");
             }
             // Redirect
             $this->redirect('admin/user-group/list-items');

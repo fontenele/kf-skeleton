@@ -1,6 +1,9 @@
 {
+    "name": "KFApp",
+    "description": "KF App",
     "require-dev": {
-        "kf/kf": "dev-master"
+        "kf/kf": "dev-master",
+        "kevinlebrun/slug.php": "1.0.1"
     },
     "require": {
         "php": ">=5.3.0"

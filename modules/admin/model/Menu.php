@@ -2,7 +2,7 @@
 
 namespace Admin\Model;
 
-class Menu extends \KF\Lib\Module\Model {
+class Menu extends \Kf\Module\Model {
 
     public function __construct() {
         $this->_table = 'public.menu';
