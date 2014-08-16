@@ -61,7 +61,7 @@ class UserGroup extends \Kf\Module\Controller {
      * @return string
      */
     public static function dgStatus($row) {
-        return $row['status'] == 1 ? '<span title="Ativo">' . \Kf\View\Html\Helper\Glyphicon::get('ok-circle text-success') . '</span>' : '<span title="Inativo">' . \Kf\View\Html\Helper\Glyphicon::get('ban-circle text-danger') . '</span>';
+        return $row['status'] == 1 ? '<span title="Ativo">' . \Kf\View\Html\Helper\Icon::get('check-circle-o text-success') . '</span>' : '<span title="Inativo">' . \Kf\View\Html\Helper\Icon::get('ban text-muted') . '</span>';
     }
 
     /**
@@ -70,7 +70,7 @@ class UserGroup extends \Kf\Module\Controller {
      * @return string
      */
     public static function dgEdit($row) {
-        return '<a title="Editar grupo" href=' . \Kf\Kernel::$router->basePath . "admin/user-group/new-item/cod/{$row['cod']}>" . \Kf\View\Html\Helper\Glyphicon::get('folder-open') . '</a>';
+        return '<a title="Editar grupo" href=' . \Kf\Kernel::$router->basePath . "admin/user-group/new-item/cod/{$row['cod']}>" . \Kf\View\Html\Helper\icon::get('folder-open-o') . '</a>';
     }
 
     /**
@@ -79,7 +79,7 @@ class UserGroup extends \Kf\Module\Controller {
      * @return string
      */
     public static function dgDelete($row) {
-        return '<a class="text-danger" title="Excluir grupo" data-confirmation data-placement="left" href="' . \Kf\Kernel::$router->basePath . "admin/user-group/delete-item/cod/{$row['cod']}\">" . \Kf\View\Html\Helper\Glyphicon::get('remove-sign') . '</a>';
+        return '<a class="text-danger" title="Excluir grupo" data-confirmation data-placement="left" href="' . \Kf\Kernel::$router->basePath . "admin/user-group/delete-item/cod/{$row['cod']}\">" . \Kf\View\Html\Helper\Icon::get('times-circle-o') . '</a>';
     }
 
     public function deleteItem() {
