@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <system>
+        <modules>Admin</modules>
+        <modules>Main</modules>
+<!--        <modules>KfDevTools</modules>-->
+    </system>
+</config>
