@@ -47,7 +47,7 @@
      */
     $.each($('[data-value-change]'), function(i, item) {
         $(item).on('change', function() {
-            if ($(this).val() !== $(this).data('value')) {
+            if ($(this).val() !== "" + $(this).data('value')) {
                 $(this).addClass('has-changed');
             } else {
                 $(this).removeClass('has-changed');

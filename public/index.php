@@ -39,7 +39,7 @@ class Kernel {
             self::bootLoader();
             self::setConstants();
             self::loadLibs();
-            self::loadConfigs();
+            self::loadSystemConfigs();
             self::loadLogger();
             self::loadRequest();
             self::loadRouter();
@@ -49,11 +49,11 @@ class Kernel {
                 self::run();
             }
         } catch (System\Exception\ACLException $ex) {
-
+            
         } catch (System\Exception\DatabaseException $ex) {
-
+            
         } catch (System\Exception\RouterException $ex) {
-
+            
         } catch (\Exception $ex) {
             if (isset(self::$config['system']['router']['error'][$ex->getCode()])) {
                 $session = new System\Session('errorInfo');
@@ -109,12 +109,12 @@ class Kernel {
         }
     }
 
-    public static function loadConfigs() {
+    public static function loadSystemConfigs() {
         try {
-            $dir = new \Kf\System\Dir(APP_PATH . 'config');
             $envs = ['dev', 'hom', 'prod'];
             $filesIgnore = [];
 
+            $dir = new \Kf\System\Dir(APP_PATH . 'config');
             $files = $dir->getFiles()->getArrayCopy();
             sort($files);
             foreach ($files as $file) {
@@ -141,6 +141,65 @@ class Kernel {
 
                 $config = System\File::loadFile($filename);
                 self::$config = array_merge_recursive(self::$config, $config);
+            }
+
+            self::loadModulesConfigs();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public static function loadModulesConfigs() {
+        try {
+            $envs = ['dev', 'hom', 'prod'];
+            $modules = [];
+
+            foreach (self::$config['system']['modules'] as $module) {
+                switch (true) {
+                    case is_dir(APP_PATH . "modules/{$module}"):
+                        $modules[] = APP_PATH . "modules/{$module}/";
+                        break;
+                    case is_dir(APP_PATH . "vendor/{$module}/src/{$module}"):
+                        $modules[] = APP_PATH . "vendor/{$module}src/{$module}/";
+                        break;
+                    case is_dir(APP_PATH . "vendor/{$module}/{$module}/src/{$module}/"):
+                        $modules[] = APP_PATH . "vendor/{$module}/{$module}/src/{$module}/";
+                        break;
+                }
+            }
+
+            foreach ($modules as $module) {
+                if (is_dir("{$module}config")) {
+                    $filesIgnore = [];
+                    $dir = new \Kf\System\Dir("{$module}config");
+                    $files = $dir->getFiles()->getArrayCopy();
+                    sort($files);
+                    foreach ($files as $file) {
+                        $filename = "{$dir->dirName}/{$file}";
+                        if (in_array($filename, $filesIgnore)) {
+                            continue;
+                        }
+
+                        if (System\File::fileExists($filename, APPLICATION_ENV)) {
+                            $filesIgnore[] = $filename;
+                            $filename = System\File::getFileName($filename, APPLICATION_ENV);
+                            $filesIgnore[] = $filename;
+                        } else {
+                            foreach ($envs as $env) {
+                                if ($env == APPLICATION_ENV) {
+                                    continue;
+                                }
+                                if (System\File::fileExists($filename, $env)) {
+                                    $filesIgnore[] = $filename;
+                                    $filesIgnore[] = System\File::getFileName($filename, $env);
+                                }
+                            }
+                        }
+
+                        $config = System\File::loadFile($filename);
+                        self::$config = array_merge_recursive(self::$config, $config);
+                    }
+                }
             }
         } catch (\Exception $ex) {
             throw $ex;
@@ -242,27 +301,43 @@ class Kernel {
         }
     }
 
+    public static function loadJsAndCssFiles($controller, $action) {
+        $jsAndCss = ['css' => [], 'js' => []];
+        $arrController = explode('\\', $controller);
+        $_module = System\String::camelToDash($arrController[0]);
+        $_controller = System\String::camelToDash($arrController[2]);
+        $_action = System\String::camelToDash($action);
+
+        if (file_exists(sprintf(APP_PATH . "public/%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'css', 'css'))) {
+            $jsAndCss['css'][] = sprintf(self::$router->basePath . "%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'css', 'css');
+        } else {
+            if (file_exists(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'css', 'css'))) {
+                $file = base64_encode(System\Crypt::encode(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'css', 'css')));
+                $jsAndCss['css'][] = self::$router->basePath . "admin/file/css/file/{$file}";
+            }
+        }
+
+        if (file_exists(sprintf(APP_PATH . "public/%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'js', 'js'))) {
+            $jsAndCss['js'][] = sprintf(self::$router->basePath . "%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'js', 'js');
+        } else {
+            if (file_exists(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'js', 'js'))) {
+                $file = base64_encode(System\Crypt::encode(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'js', 'js')));
+                $jsAndCss['js'][] = self::$router->basePath . "admin/file/js/file/{$file}";
+            }
+        }
+        return $jsAndCss;
+    }
+
     public static function callAction($controller, $action, $request) {
         try {
             self::createLayout();
-
-            $arrController = explode('\\', $controller);
-            $_module = System\String::camelToDash($arrController[0]);
-            $_controller = System\String::camelToDash($arrController[2]);
-            $_action = System\String::camelToDash($action);
-            $pathCssJs = "%s/modules/{$_module}/{$_controller}/{$_action}.%s";
-
-            $js = array();
-            $css = array();
-
-            if (file_exists(sprintf(APP_PATH . 'public/' . $pathCssJs, 'css', 'css'))) {
-                $css[] = sprintf(self::$router->basePath . $pathCssJs, 'css', 'css');
+            if (isset(self::$config['system']['view']['afterRenderLayout'])) {
+                foreach (self::$config['system']['view']['afterRenderLayout'] as $method) {
+                    $method->render(self::$layout);
+                }
             }
 
-            if (file_exists(sprintf(APP_PATH . 'public/' . $pathCssJs, 'js', 'js'))) {
-                $js[] = sprintf(self::$router->basePath . $pathCssJs, 'js', 'js');
-            }
-
+            $cssAndJs = self::loadJsAndCssFiles($controller, $action);
             $controller = '\\' . $controller;
 
             if (!class_exists($controller)) {
@@ -276,12 +351,13 @@ class Kernel {
                 throw new \Exception("Action {$controller}::{$action} not found.", 404);
             }
 
+            $cssAndJs['css'] = array_merge(self::$layout->css, $cssAndJs['css']);
+            $cssAndJs['js'] = array_merge(self::$layout->js, $cssAndJs['js']);
+            self::$layout->css = $cssAndJs['css'];
+            self::$layout->js = $cssAndJs['js'];
+            
             // Call action
-            self::$layout->css = $css;
-            self::$layout->js = $js;
             $view = $obj->$action($request);
-//            self::$layout->css = array_merge(self::$layout->css, $css);
-//            self::$layout->js = array_merge(self::$layout->js, $js);
 
             if ($view instanceof View\Json) {
                 // Render Json output

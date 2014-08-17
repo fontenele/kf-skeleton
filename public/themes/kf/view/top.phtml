@@ -16,24 +16,13 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="<?php echo $this->topItemAtual == 'painel' ? 'active' : '' ?> dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administração <b class="caret"></b></a>
+                        <a href="<?php echo $this->basePath ?>admin/index/index">Painel Administrativo</a>
+                    </li>
+                    
+                    <li class="<?php echo $this->topItemAtual == 'painel' ? 'active' : '' ?> dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sistema <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?php echo $this->basePath ?>admin/index/index"><?php echo $this->icon('cog') ?> &nbsp;Painel Administrativo</a></li>
-                            <li role="presentation" class="divider"></li>
-                            <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->icon('institution') ?> &nbsp;Funcionários</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="<?php echo $this->basePath ?>main/funcionarios/new-item"><?php echo $this->icon('plus-circle') ?> &nbsp;Novo Funcionário</a></li>
-                                    <li><a href="<?php echo $this->basePath ?>main/funcionarios/list-items"><?php echo $this->icon('list-alt') ?> &nbsp;Ver Funcionários</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->icon('trophy') ?> &nbsp;Cargos</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="<?php echo $this->basePath ?>main/cargos/new-item"><?php echo $this->icon('plus-circle') ?> &nbsp;Novo Cargo</a></li>
-                                    <li><a href="<?php echo $this->basePath ?>main/cargos/list-items"><?php echo $this->icon('list-alt') ?> &nbsp;Ver Cargos</a></li>
-                                </ul>
-                            </li>
+                            
                             <li class="dropdown-submenu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->icon('user') ?> &nbsp;Usuários</a>
                                 <ul class="dropdown-menu">
@@ -53,6 +42,44 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="<?php echo $this->basePath ?>admin/menu/list-items"><?php echo $this->icon('list-alt') ?> &nbsp;Ver Menus</a></li>
                                     <li><a href="<?php echo $this->basePath ?>admin/menu/new-item"><?php echo $this->icon('plus-circle') ?> &nbsp;Novo Menu</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->icon('lock') ?> &nbsp;Acessos</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?php echo $this->basePath ?>admin/access/list-items"><?php echo $this->icon('list-alt') ?> &nbsp;Ver Acessos</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="<?php echo $this->topItemAtual == 'painel' ? 'active' : '' ?> dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">RH <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->icon('institution') ?> &nbsp;Funcionários</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?php echo $this->basePath ?>main/funcionarios/new-item"><?php echo $this->icon('plus-circle') ?> &nbsp;Novo Funcionário</a></li>
+                                    <li><a href="<?php echo $this->basePath ?>main/funcionarios/list-items"><?php echo $this->icon('list-alt') ?> &nbsp;Ver Funcionários</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->icon('trophy') ?> &nbsp;Cargos</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?php echo $this->basePath ?>main/cargos/new-item"><?php echo $this->icon('plus-circle') ?> &nbsp;Novo Cargo</a></li>
+                                    <li><a href="<?php echo $this->basePath ?>main/cargos/list-items"><?php echo $this->icon('list-alt') ?> &nbsp;Ver Cargos</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="<?php echo $this->topItemAtual == 'painel' ? 'active' : '' ?> dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Kernel <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->icon('cogs') ?> &nbsp;Gerador</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<?php echo $this->basePath ?>admin/database/create-default-entities"><?php echo $this->icon('database') ?> &nbsp;Criar tabelas</a></li>
                                 </ul>
                             </li>
                         </ul>
