@@ -3,6 +3,7 @@
     "description": "KF App",
     "require-dev": {
         "kf/kf": "dev-master",
+        "kf/kf-dev-tools": "dev-master",
         "kevinlebrun/slug.php": "1.0.1",
         "nitmedia/wkhtml2pdf": "dev-master"
     },
