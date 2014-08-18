@@ -2,10 +2,9 @@
 
 namespace Admin\Controller;
 
-class Access {
+class Access extends \Kf\Module\Controller {
 
     public function listItems() {
-        xd('list items');
         return $this->view;
     }
 

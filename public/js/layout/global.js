@@ -54,6 +54,10 @@
             }
         });
     });
+    /**
+     * Select
+     */
+    $('.selectpicker').selectpicker();
 })(jQuery);
 
 // Global
