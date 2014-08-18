@@ -8,7 +8,7 @@
     },
     "suggest": {
         "nitmedia/wkhtml2pdf": "dev-master"
-    }
+    },
     "require": {
         "php": ">=5.3.0"
     }
