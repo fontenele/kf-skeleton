@@ -3,6 +3,8 @@
     <system>
         <modules>Admin</modules>
         <modules>Main</modules>
-<!--        <modules>KfDevTools</modules>-->
+        <modules>
+            <KfDevTools>kf/kf-dev-tools</KfDevTools>
+        </modules>
     </system>
 </config>

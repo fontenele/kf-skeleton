@@ -101,9 +101,7 @@ class Kernel {
 
     public static function loadLibs() {
         try {
-            require_once('vendor/autoload.php');
-            require_once(VENDOR_PATH . 'kf/kf/src/Kf/fdebug.php');
-            require_once(VENDOR_PATH . 'kf/kf/src/Kf/System/Exceptions.php');
+            require_once(VENDOR_PATH . 'autoload.php');
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -155,18 +153,35 @@ class Kernel {
             $modules = [];
 
             foreach (self::$config['system']['modules'] as $module) {
+                $path = null;
+                if (is_array($module)) {
+                    $path = current($module);
+                    $module = key($module);
+                }
                 switch (true) {
+                    case $path && is_dir(APP_PATH . "modules/{$path}/{$module}"):
+                        $modules[$module] = APP_PATH . "modules/{$path}/{$module}/";
+                        break;
+                    case $path && is_dir(VENDOR_PATH . "{$path}/src/{$module}"):
+                        $modules[$module] = VENDOR_PATH . "{$path}/src/{$module}/";
+                        break;
+                    case $path && is_dir(VENDOR_PATH . "{$path}/{$module}/src/{$module}/"):
+                        $modules[$module] = VENDOR_PATH . "{$path}/{$module}/src/{$module}/";
+                        break;
+
                     case is_dir(APP_PATH . "modules/{$module}"):
-                        $modules[] = APP_PATH . "modules/{$module}/";
+                        $modules[$module] = APP_PATH . "modules/{$module}/";
                         break;
-                    case is_dir(APP_PATH . "vendor/{$module}/src/{$module}"):
-                        $modules[] = APP_PATH . "vendor/{$module}src/{$module}/";
+                    case is_dir(VENDOR_PATH . "{$module}/src/{$module}"):
+                        $modules[$module] = VENDOR_PATH . "{$module}/src/{$module}/";
                         break;
-                    case is_dir(APP_PATH . "vendor/{$module}/{$module}/src/{$module}/"):
-                        $modules[] = APP_PATH . "vendor/{$module}/{$module}/src/{$module}/";
+                    case is_dir(VENDOR_PATH . "{$module}/{$module}/src/{$module}"):
+                        $modules[$module] = VENDOR_PATH . "{$module}/{$module}/src/{$module}/";
                         break;
                 }
             }
+
+            self::$config['modulesPath'] = $modules;
 
             foreach ($modules as $module) {
                 if (is_dir("{$module}config")) {
@@ -308,23 +323,24 @@ class Kernel {
         $_controller = System\String::camelToDash($arrController[2]);
         $_action = System\String::camelToDash($action);
 
+        $modulePath = isset(\Kf\Kernel::$config['modulesPath'][$arrController[0]]) ? \Kf\Kernel::$config['modulesPath'][$arrController[0]] : null;
+
+        // CSS
         if (file_exists(sprintf(APP_PATH . "public/%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'css', 'css'))) {
             $jsAndCss['css'][] = sprintf(self::$router->basePath . "%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'css', 'css');
-        } else {
-            if (file_exists(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'css', 'css'))) {
-                $file = base64_encode(System\Crypt::encode(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'css', 'css')));
-                $jsAndCss['css'][] = self::$router->basePath . "admin/file/css/file/{$file}";
-            }
+        } elseif (file_exists(sprintf("{$modulePath}public/%s/{$_controller}/{$_action}.%s", 'css', 'css'))) {
+            $file = base64_encode(System\Crypt::encode(sprintf("{$modulePath}public/%s/{$_controller}/{$_action}.%s", 'css', 'css')));
+            $jsAndCss['css'][] = self::$router->basePath . "admin/file/css/file/{$file}";
         }
 
+        // JS
         if (file_exists(sprintf(APP_PATH . "public/%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'js', 'js'))) {
             $jsAndCss['js'][] = sprintf(self::$router->basePath . "%s/modules/{$_module}/{$_controller}/{$_action}.%s", 'js', 'js');
-        } else {
-            if (file_exists(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'js', 'js'))) {
-                $file = base64_encode(System\Crypt::encode(sprintf(APP_PATH . "vendor/{$arrController[0]}/{$arrController[0]}/src/{$arrController[0]}/public/%s/{$_controller}/{$_action}.%s", 'js', 'js')));
-                $jsAndCss['js'][] = self::$router->basePath . "admin/file/js/file/{$file}";
-            }
+        } elseif (file_exists(sprintf("{$modulePath}public/%s/{$_controller}/{$_action}.%s", 'js', 'js'))) {
+            $file = base64_encode(System\Crypt::encode(sprintf("{$modulePath}public/%s/{$_controller}/{$_action}.%s", 'js', 'js')));
+            $jsAndCss['js'][] = self::$router->basePath . "admin/file/js/file/{$file}";
         }
+
         return $jsAndCss;
     }
 
@@ -355,7 +371,7 @@ class Kernel {
             $cssAndJs['js'] = array_merge(self::$layout->js, $cssAndJs['js']);
             self::$layout->css = $cssAndJs['css'];
             self::$layout->js = $cssAndJs['js'];
-            
+
             // Call action
             $view = $obj->$action($request);
 
