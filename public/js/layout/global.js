@@ -57,7 +57,10 @@
     /**
      * Select
      */
-    $('.selectpicker').selectpicker();
+    $('.selectpicker,[data-select-picker]').selectpicker();
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+        $('.selectpicker,[data-select-picker]').selectpicker('mobile');
+    }
 })(jQuery);
 
 // Global

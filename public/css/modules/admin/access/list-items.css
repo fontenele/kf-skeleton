@@ -1,0 +1,33 @@
+#container > div {
+    height: 300px;
+}
+#block-access {
+    height: 260px;
+    overflow: auto;
+}
+#block-access .panel .panel-body .access-item {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+.btn-remove-item {
+    cursor: pointer;
+}
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.example li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.example li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
