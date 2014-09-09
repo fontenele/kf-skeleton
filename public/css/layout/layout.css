@@ -163,12 +163,59 @@ optgroup option {
     margin-top: 5%;
 }
 
+.block-well {
+    border: 1px solid #e7e7e7;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05) inset;
+    background-color: #fafafa;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    min-height: 20px;
+}
+
+.hr {
+    height: 3px;
+    background-color: #e7e7e7;
+    box-shadow: 0x 2px 0 rgba(0, 0, 0, 0.05) inset;
+    display: table;
+    width: 99%;
+    clear: both;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.text-white {
+    color: #ffffff !important;
+}
+
 .has-changed .help-block, .has-changed .control-label {
-    color: #ff851b;
+    color: #ff851b !important;
 }
 .has-changed .form-control, .has-changed .form-control:focus, .has-changed.form-control {
     border: 1px solid #ff851b;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.075) inset;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.input-group-btn .btn-group {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.bootstrap-select .bootstrap-select-searchbox .input-block-level.form-control {
+    font-size: 12px;
+    height: 28px;
+    line-height: 28px;
+    padding: 4px 10px;
+    margin-bottom: 8px;
+}
+
+.readonly, fieldset.readonly .form-control {
+    background-color: #eeeeee;
+    cursor: not-allowed;
+    opacity: 1;
 }
 
 /* JS TREE */

@@ -1,18 +1,50 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         Acessos
-        <a id="btn-new-access" data-toggle="modal" data-target="#md-new-access" title="Novo Acesso" href="#" class="btn btn-info btn-xs pull-right"><?php echo $this->icon('plus-circle') ?> Novo Acesso</a>
+<!--        <a id="btn-new-access" data-toggle="modal" data-target="#md-new-access" title="Novo Acesso" href="#" class="margin-left-xs btn btn-info btn-xs pull-right"><?php echo $this->icon('plus-circle') ?> Novo Acesso</a>-->
+<!--        <a id="btn-new-group" data-toggle="modal" data-target="#md-new-group" title="Novo Grupo de Acesso" href="#" class="btn btn-info btn-xs pull-right"><?php echo $this->icon('plus-circle') ?> Novo Grupo de Acesso</a>-->
     </div>
     <div class="panel-body">
-        <div id="container">
-            <div class="col-sm-8 col-xs-12 well">
-                <div id="block-access"></div>
+        <div>
+            <?php echo $this->form()->openTag('fm-access-items', ['method' => 'post', 'action' => $this->basePath . 'admin/access/save-items', 'class' => 'form-horizontal', 'role' => 'form']) ?>
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group col-xs-12">
+
+                    <div class="input-group col-xs-12">
+                        <div class='input-group-btn'>
+                            <select data-select-picker data-size="100%" data-live-search="true" data-style="btn-info" class='show-menu-arrow pull-left col-xs-11' title="Módulo" id="module" name="module">
+                                <option>Selecione um Módulo</option>
+                                <option data-divider="true"></option>
+                                <?php foreach ($this->modules as $module): ?>
+                                    <option value="<?php echo $module['cod'] ?>"><?php echo $module['name'] ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <button type='button' title='Novo Módulo' id='btn-new-module' data-toggle="modal" data-target="#md-new-module" class="pull-left btn btn-primary col-xs-1"><?php echo $this->icon('plus-square') ?></button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <div class="col-sm-4 col-xs-12">
-                <?php echo $this->form()->openTag('fm-access', ['method' => 'post', 'action' => $this->basePath . 'admin/access/list-items', 'class' => 'form-horizontal', 'role' => 'form']) ?>
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group">
+
+                    <div class="input-group col-xs-12">
+                        <div class='input-group-btn'>
+                            <select data-select-picker data-size="100%" data-live-search="true" data-style="btn-info" class="show-menu-arrow pull-left col-xs-11" title="SubMódulo" id="submodule" name="submodule" disabled>
+                                <option>Selecione um SubMódulo</option>
+                                <option data-divider="true"></option>
+                            </select>
+                            <button type='button' title='Novo SubMódulo' id='btn-new-submodule' data-toggle="modal" data-target="#md-new-submodule" class="pull-left btn btn-primary col-xs-1" disabled><?php echo $this->icon('plus-square') ?></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <span class="hr"></span>
+            <div class="col-sm-4 col-xs-12 block-access">
                 <fieldset>
                     <div class="form-group">
-                        <select id="controller" title="Teste" name="controller" class="show-menu-arrow col-xs-12" data-select-picker data-size="8" data-show-subtext="true" data-size="100%" data-live-search="true">
+                        <select title="Controller" id="controller" name="controller" class="show-menu-arrow col-xs-12" data-select-picker data-style="btn-info" data-size="8" data-show-subtext="true" data-size="100%" data-live-search="true">
                             <option>Selecione um controller</option>
                             <?php foreach ($this->controllers as $module => $controllers): ?>
                                 <optgroup label="<?php echo $module ?>">
@@ -24,17 +56,90 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <div class="col-xs-12">
+                        <div class="col-xs-12" style='height: 210px; overflow: auto;'>
                             <ol id="methods" class="list-group"></ol>
                         </div>
                     </div>
                 </fieldset>
             </div>
+            <div class="col-sm-8 col-xs-12 block-access">
+                <div id="block-access" class="block-well"></div>
+            </div>
+            <div class='col-xs-6 col-xs-offset-6 text-right'>
+                <button type='button' data-toggle="modal" data-target="#md-new-access" id='btn-new-access' class="btn btn-warning btn-xs" title="Novo Acesso" disabled><?php echo $this->icon('plus-square') ?> Novo Acesso</button>
+            </div>
+            <br clear='both' /><hr />
+            <div class='col-xs-6 col-xs-offset-6 text-right'>
+                <?php echo $this->form()->submitSave()->addClass('btn-save-access-items')->attr('disabled', 'disabled')->render() ?>
+            </div>
+            <?php echo $this->form()->closeTag() ?>
         </div>
-        <?php echo $this->form()->closeTag() ?>
     </div>
 </div>
 
+<!--Modal de Novo Módulo-->
+<div id="md-new-module" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Novo Módulo</h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->form()->openTag('fm-access_module', ['method' => 'post', 'action' => $this->basePath . 'admin/access/save-module', 'class' => 'form-horizontal', 'role' => 'form']) ?>
+                <fieldset>
+                    <?php
+                    echo $this->entities['module']->getField('cod')->getViewComponent()->render();
+                    echo $this->entities['module']->getField('name')->getViewComponent()
+                            ->addData('value', $this->entities['module']->getField('name')->getViewComponent()->getValue())
+                            ->addData('value-change')
+                            ->formGroup('col-xs-12', 'col-xs-3 text-right', 'col-xs-8');
+                    ?>
+                </fieldset>
+                <?php echo $this->form()->closeTag() ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <?php echo $this->form()->submitSave()->addClass('btn-save-module')->render() ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal de Novo SubMódulo-->
+<div id="md-new-submodule" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Novo SubMódulo</h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->form()->openTag('fm-access_submodule', ['method' => 'post', 'action' => $this->basePath . 'admin/access/save-submodule', 'class' => 'form-horizontal', 'role' => 'form']) ?>
+                <fieldset>
+                    <?php
+                    echo $this->entities['submodule']->getField('cod')->getViewComponent()->render();
+                    echo $this->entities['submodule']->getField('name')->getViewComponent()
+                            ->addData('value', $this->entities['submodule']->getField('name')->getViewComponent()->getValue())
+                            ->addData('value-change')
+                            ->formGroup('col-xs-12', 'col-xs-3 text-right', 'col-xs-8');
+                    echo $this->entities['submodule']->getField('access_module')->getViewComponent()
+                            ->addData('value', $this->entities['submodule']->getField('access_module')->getViewComponent()->getValue())
+                            ->addData('value-change')
+                            ->formGroup('col-xs-12', 'col-xs-3 text-right', 'col-xs-8');
+                    ?>
+                </fieldset>
+                <?php echo $this->form()->closeTag() ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <?php echo $this->form()->submitSave()->addClass('btn-save-submodule')->render() ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal de Novo Acesso-->
 <div id="md-new-access" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -43,18 +148,33 @@
                 <h4 class="modal-title">Novo Acesso</h4>
             </div>
             <div class="modal-body">
-                <?php echo $this->form()->openTag('fm-access', ['method' => 'post', 'action' => $this->basePath . 'admin/access/list-items', 'class' => 'form-horizontal', 'role' => 'form']) ?>
-                <div class="form-group">
-                    <label for="name" class="control-label col-xs-3 text-right">Nome</label>
-                    <div class="col-xs-8">
-                        <input type="text" placeholder="Nome do acesso" name="name" class="form-control" />
-                    </div>
-                </div>
+                <?php echo $this->form()->openTag('fm-access', ['method' => 'post', 'action' => $this->basePath . 'admin/access/save-access', 'class' => 'form-horizontal', 'role' => 'form']) ?>
+                <fieldset>
+                    <?php
+                    echo $this->entities['access']->getField('cod')->getViewComponent()
+                            ->render();
+                    echo $this->entities['access']->getField('name')->getViewComponent()
+                            ->addData('value', $this->entities['access']->getField('name')->getViewComponent()->getValue())
+                            ->addData('value-change')
+                            ->formGroup('col-xs-12', 'col-xs-3 text-right', 'col-xs-8');
+                    echo $this->entities['submodule']->getField('access_module')->getViewComponent()
+                            ->addData('value', $this->entities['submodule']->getField('access_module')->getViewComponent()->getValue())
+                            ->addData('value-change')
+                            ->attr('disabled', 'disabled')
+                            ->formGroup('col-xs-12', 'col-xs-3 text-right', 'col-xs-8');
+                    echo $this->entities['access']->getField('access_submodule')->getViewComponent()
+                            ->addData('value', $this->entities['access']->getField('access_submodule')->getViewComponent()->getValue())
+                            ->addData('value-change')
+                            ->formGroup('col-xs-12', 'col-xs-3 text-right', 'col-xs-8');
+                    ?>
+                </fieldset>
                 <?php echo $this->form()->closeTag() ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button id="btn-save-new-access" type="button" class="btn btn-primary">Salvar</button>
+                <?php
+                echo $this->form()->submitSave()->addClass('btn-save-access')->render()
+                ?>
             </div>
         </div>
     </div>

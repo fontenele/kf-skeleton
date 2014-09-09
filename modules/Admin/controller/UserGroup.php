@@ -44,8 +44,9 @@ class UserGroup extends \Kf\Module\Controller {
             // Datagrid
             $dg = new \Kf\View\Html\Datagrid\Datagrid('dg-user-group');
             $dg->setEntity(new \Admin\Entity\UserGroup);
-            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(3, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\UserGroup::dgEdit')));
-            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(4, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\UserGroup::dgDelete')));
+            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create('1.9', '', '4%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\UserGroup::dgAccess')));
+            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(4, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\UserGroup::dgEdit')));
+            $dg->addHeader(\Kf\View\Html\Datagrid\Header::create(5, '', '2%', 'text-center', new \Kf\View\Html\Renderer('\Admin\Controller\UserGroup::dgDelete')));
             $dg->setData($service->fetchAll($this->request->post->getArrayCopy(), $dg->getPaginator()->getRowsPerPage(), $dg->getPaginator()->getActive()));
             $this->view->dg = $dg;
             // Render HTML
@@ -53,6 +54,15 @@ class UserGroup extends \Kf\Module\Controller {
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * Render Access Column
+     * @param array $row
+     * @return string
+     */
+    public static function dgAccess($row) {
+        return '<a title="Ver Acessos" href="' . \Kf\Kernel::$router->basePath . 'admin/user-group/list-access/cod/' . $row['cod'] . '">Acessos</a>';
     }
 
     /**
@@ -80,6 +90,21 @@ class UserGroup extends \Kf\Module\Controller {
      */
     public static function dgDelete($row) {
         return '<a class="text-danger" title="Excluir grupo" data-confirmation data-placement="left" href="' . \Kf\Kernel::$router->basePath . "admin/user-group/delete-item/cod/{$row['cod']}\">" . \Kf\View\Html\Helper\Icon::get('times-circle-o') . '</a>';
+    }
+
+    public function listAccess() {
+        $service = new \Admin\Service\UserGroup; // Service
+        $serviceItems = new \Admin\Service\AccessItem; // Service
+        $entity = new \Admin\Entity\UserGroup; // Entity
+        $pk = $entity->getPrimaryKey();
+        // Return if primary key wasnt setted
+        if (!$this->request->get->$pk) {
+            \Kf\System\Messenger::error("Erro ao tentar ver acessos do grupo pois nenhum grupo foi informado.");
+            $this->redirect('admin/user-group/list-items');
+        }
+        $this->view->userGroup = $service->findOneByCod($this->request->get->$pk);
+        $this->view->acessos = $serviceItems->listarItems();
+        return $this->view;
     }
 
     public function deleteItem() {

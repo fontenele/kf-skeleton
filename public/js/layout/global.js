@@ -1,11 +1,47 @@
 // jQuery Plugins
 (function($) {
+    if (!window.console) {
+        console = {
+            log: function(args) {
+                alert(args);
+            },
+            warn: function(args) {
+                alert(args);
+            },
+            info: function(args) {
+                alert(args);
+            },
+            debug: function(args) {
+                alert(args);
+            },
+            error: function(args) {
+                alert(args);
+            },
+            time: function(args) {
+                alert(args);
+            },
+            timeEnd: function(args) {
+                alert(args);
+            }
+        };
+    }
     /**
      * Debug
      */
     $.log = function() {
         if (window['console'] && window['console'].log) {
-            return console.log(arguments);
+            return console.log(arguments.length == 1 ? arguments[0] : arguments);
+        } else {
+            var args = '';
+            for (x in arguments) {
+                args += arguments[x] + ', ';
+            }
+            alert(args);
+        }
+    };
+    $.logDebug = function() {
+        if (window['console'] && window['console'].debug) {
+            return console.debug(arguments.length == 1 ? arguments[0] : arguments);
         } else {
             var args = '';
             for (x in arguments) {
@@ -13,6 +49,60 @@
             }
             alert(args);
         }
+    };
+    $.logInfo = function() {
+        if (window['console'] && window['console'].info) {
+            return console.info(arguments.length == 1 ? arguments[0] : arguments);
+        } else {
+            var args = '';
+            for (x in arguments) {
+                args += arguments[x] + ',';
+            }
+            alert(args);
+        }
+    };
+    $.logWarn = function() {
+        if (window['console'] && window['console'].warn) {
+            return console.warn(arguments.length == 1 ? arguments[0] : arguments);
+        } else {
+            var args = '';
+            for (x in arguments) {
+                args += arguments[x] + ',';
+            }
+            alert(args);
+        }
+    };
+    $.logError = function() {
+        if (window['console'] && window['console'].error) {
+            return console.error(arguments.length == 1 ? arguments[0] : arguments);
+        } else {
+            var args = '';
+            for (x in arguments) {
+                args += arguments[x] + ',';
+            }
+            alert(args);
+        }
+    };
+    $.debugStart = function(name) {
+        $.logWarn('Iniciando debug: ' + name);
+        console.time(name);
+    };
+    $.debugFinish = function(name) {
+        console.group(name);
+        $.logWarn('Debug: ' + name);
+        console.trace();
+        console.timeEnd(name);
+        console.groupEnd();
+    };
+    $.debugProfileStart = function() {
+        $.logWarn('Iniciando debug profile: ' + name);
+        console.profile();
+    };
+    $.debugProfileFinish = function() {
+        console.group(name);
+        $.logWarn('Finalizado debug profile: ' + name);
+        console.profileEnd(name);
+        console.groupEnd();
     };
     /**
      * Money Field
@@ -58,10 +148,80 @@
      * Select
      */
     $('.selectpicker,[data-select-picker]').selectpicker();
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
         $('.selectpicker,[data-select-picker]').selectpicker('mobile');
     }
+
+    $.fn.submitAjax = function(callbackDone, callbackFail) {
+        callbackDone = callbackDone ? callbackDone : function() {
+        };
+        callbackFail = callbackFail ? callbackFail : function() {
+        };
+        $.ajax({
+            url: this.attr('action'),
+            type: this.attr('method') ? this.attr('method') : 'POST',
+            data: this.serialize(),
+            dataType: 'json'
+        }).done(function(data, status) {
+            callbackDone(data, status)
+        }).fail(function(data, status) {
+            callbackFail(data, status)
+        });
+    };
+    $.fn.readonly = function(enable) {
+        if (!this[0]) {
+            return;
+        }
+        if (this[0].tagName == 'SELECT') {
+            if (enable) {
+                this.on('focus', function() {
+                    this.defaultIndex = this.selectedIndex;
+                });
+                this.on('change', function() {
+                    this.selectedIndex = this.defaultIndex;
+                });
+                this.prop('readonly', 'readonly');
+                this.addClass('readonly');
+                this.find('option').addClass('readonly');
+                return;
+            }
+            this.off('focus');
+            this.off('change');
+            this.removeClass('readonly');
+            this.prop('readonly', false);
+            this.find('option').removeClass('readonly');
+            return;
+        }
+        if (enable) {
+            this.prop('readonly', 'readonly');
+            this.addClass('readonly');
+            return;
+        }
+        this.prop('readonly', false);
+        this.removeClass('readonly');
+        return;
+    };
 })(jQuery);
+
+
+var x = Error;
+x.prototype.log = function() {
+    var line = this.lineNumber ? this.lineNumber : this.stack;
+    var stackContent = this.stack.split("\n")[0].split('@');
+    stackContent[1] = stackContent[1].split(':');
+    stackContent[1].pop();
+    line = stackContent[1].pop();
+    var file = stackContent[1].join(':');
+    console.group('%c' + file + ' [' + line + ']' + (stackContent[0] ? ' %c' + stackContent[0] + '()' : ''), "color: green;", stackContent[0] ? "color: blue;" : ' ');
+    $.log(arguments);
+    console.groupEnd();
+};
+
+window.onerror = handleError;
+function handleError(err, url, line) {
+    console.warn('%cERROR! [' + url + ':' + line + ']\n' + err, 'color: red;');
+    return true;
+}
 
 // Global
 Global = {};
@@ -95,7 +255,6 @@ Global.alert = {
         Global.alert.show('error', msg);
     }
 };
-
 Global.html = {
     '_tpl': {
         'form': {
@@ -122,7 +281,6 @@ Global.html = {
         return Global.html._tpl.icon.replace('{$name}', name);
     }
 };
-
 Global.http = {
     'showError': true,
     'messageError': 'Erro ao fazer requisição',
@@ -147,7 +305,6 @@ Global.http = {
         window.location = hostPath + path;
     }
 };
-
 Timer = {
     'hours': 0,
     'minutes': 0,
