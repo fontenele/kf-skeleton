@@ -1,8 +1,9 @@
 <div class="panel panel-default">
     <div class="panel-heading">Lista de Acessos do Grupo <strong><?php echo $this->userGroup['name'] ?></strong><a title="Voltar para listagem" href="<?php echo $this->basePath ?>admin/user-group/list-items" class="btn btn-info btn-xs pull-right"><?php echo $this->icon('arrow-circle-left') ?> Voltar para Listagem</a></div>
     <div class="panel-body">
-        <?php echo $this->form()->openTag('fm-user-group-access', ['method' => 'post', 'action' => $this->basePath . 'admin/user-group/list-access', 'class' => 'form-inline', 'role' => 'form']) ?>
+        <?php echo $this->form()->openTag('fm-user-group-access', ['method' => 'post', 'action' => $this->basePath . 'admin/user-group/save-access', 'class' => 'form-inline', 'role' => 'form']) ?>
         <fieldset>
+            <input type="hidden" name="userGroup" value="<?php echo $this->userGroup['cod'] ?>" />
             <?php foreach ($this->acessos as $modulo): ?>
 
                 <div class='panel panel-default panel-collapse'>
@@ -15,7 +16,7 @@
                                     <?php //xd($modulo, $submodulo, $acesso) ?>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="access[<?php echo $acesso['cod'] ?>]"> <?php echo $acesso['name'] ?>
+                                            <input <?php echo $acesso['checked'] ? 'checked="checked"' : null ?> type="checkbox" name="access[<?php echo $acesso['cod'] ?>]"> <?php echo $acesso['name'] ?>
                                         </label>
                                     </div>
                                 <?php endforeach; ?>

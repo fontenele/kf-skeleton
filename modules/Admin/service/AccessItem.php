@@ -12,9 +12,13 @@ class AccessItem extends \Kf\Module\Service {
         return $this->model()->limparItemsDeSubmodulo($submodulo);
     }
 
-    public function listarItems($modulo = null, $submodulo = null, $acesso = null) {
+    public function listarItemsDeUserGroup($userGroup) {
+        return $this->model()->listarItemsDeUserGroup($userGroup);
+    }
+
+    public function listarItems($userGroup, $modulo = null, $submodulo = null, $acesso = null) {
         $items = [];
-        foreach ($this->model()->listarItems($modulo, $submodulo, $acesso) as $item) {
+        foreach ($this->model()->listarItems($userGroup, $modulo, $submodulo, $acesso) as $item) {
             if (!isset($items[$item['access_module']])) {
                 $items[$item['access_module']] = [
                     'cod' => $item['access_module'],
@@ -33,16 +37,15 @@ class AccessItem extends \Kf\Module\Service {
                 $items[$item['access_module']]['submodules'][$item['access_submodule']]['access'][$item['access']] = [
                     'cod' => $item['access'],
                     'name' => $item['access_name'],
+                    'checked' => $item['access_user_group'] ? true : false,
                     'items' => []
                 ];
             }
-
             $items[$item['access_module']]['submodules'][$item['access_submodule']]['access'][$item['access']]['items'][$item['access_item']] = [
                 'cod' => $item['access_item'],
                 'name' => $item['access_item_name']
             ];
         }
-        //xd($items);
         return $items;
     }
 

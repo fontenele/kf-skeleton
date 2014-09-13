@@ -126,6 +126,15 @@ optgroup option {
     clear: both;
 }
 
+.panel-maximized {
+    position: absolute;
+    z-index: 99999;
+    width: 98%;
+    height: 98%;
+    left: 1%;
+    top: 1%;
+}
+
 .margin-left-xs {
     margin-left: 1%;
 }

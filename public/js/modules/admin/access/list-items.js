@@ -15,7 +15,6 @@ Access.ListItems.enableSortable = function() {
             _super(item);
         },
         onCancel: function(item, container, _super) {
-            $.log('cancel');
             item.remove();
         },
         onDrop: function(item) {
@@ -140,22 +139,18 @@ $(document).ready(function() {
         $.getJSON(hostPath + 'admin/access/get-access-list', {'submodule': submodule}, function(result, status) {
             $('#btn-new-access').prop('disabled', false);
             $('.btn-save-access-items').prop('disabled', false);
-            //$.log('*** [tudo]', result.access);
             $.each(result.access, function(i, access) {
                 $('#block-access').append('<div data-access-cod="' + access.cod + '" class="panel panel-default"><div class="panel-heading">' + access.name + '</div><div class="panel-body"><ol class="access-item col-xs-6"></ol><ol class="access-item col-xs-6"></ol></div></div>');
                 var $ol = $('#block-access div[data-access-cod=' + access.cod + '] .access-item:first-child');
-                $.log('[access]', i, access, $ol);
                 $.each(access.items, function(j, item) {
                     if (item) {
                         var _item = item.split('::');
                         var controller = _item[0].split('\\').join('|');
                         var method = _item[1];
                         $ol.append('<li class="list-group-item" data-controller="' + controller + '" data-method="' + method + '">' + item + '<i class="btn-remove-item text-danger fa fa-times-circle pull-right"></i><input type="hidden" name="access[' + $ol.closest('.panel').data('access-cod') + '][]" value="' + item + '" class="access-hidden-item" /></li>');
-                        $.log(' + [items]', controller, method);
                     }
 
                 });
-                //$.log($ol);
             });
             Access.ListItems.enableSortable();
         });
@@ -194,7 +189,6 @@ $(document).ready(function() {
     $('#fm-access-items .btn-save-access-items').on('click', function() {
         var $form = $('#fm-access-items');
         $form.submitAjax(function(data, status) {
-            $.log(data)
             if (status == 'success') {
                 Global.alert.showSuccess(data.message);
             } else {

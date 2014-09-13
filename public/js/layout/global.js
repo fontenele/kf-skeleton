@@ -144,6 +144,15 @@
             }
         });
     });
+    $('[data-panel-max-button]').on('click', function() {
+        var $target = $(this).data('target') ? $($(this).data('target')) : $(this).parents('.panel:eq(0)');
+        if ($target.hasClass('panel-maximized')) {
+            $target.removeClass('panel-maximized');
+        } else {
+            $target.addClass('panel-maximized');
+        }
+        return false;
+    });
     /**
      * Select
      */

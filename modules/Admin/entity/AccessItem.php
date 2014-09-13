@@ -22,7 +22,7 @@ class AccessItem extends \Kf\Module\Entity {
                         ->setDbOrderBySequence(2)
                         ->setDbOrderBySortType('ASC')
                         ->setSearchCriteria(\Kf\Database\Criteria::create(\Kf\Database\Criteria::CONDITION_LIKE))
-                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(2, 'Item', '60%'))
+                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(2, 'Item', '40%'))
                         ->setViewComponent(\Kf\View\Html\InputText::create('name', 'Item')
                                 ->setRequired(true)
                                 ->setPlaceholder('Nome do Item de Acesso')));
@@ -35,9 +35,19 @@ class AccessItem extends \Kf\Module\Entity {
                         ->setFkEntity(new \Admin\Entity\Access(false))
                         ->setFkEntityField('cod')
                         ->setFkEntityJoinType(\Kf\Database\Field::DB_JOIN_INNER)
-                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(1, 'Acesso', '30%'))
+                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(1, 'Acesso', '25%'))
                         ->setViewComponent(\Kf\View\Html\Select::create('access', 'Acesso')
                                 ->setRequired(true)));
+        // Path
+        $this->addField(self::createField('path')
+                        ->setDbName('path')
+                        ->setDbType(\Kf\Database\Field::DB_TYPE_VARCHAR)
+                        ->setDbMaxLength(1000)
+                        ->setSearchCriteria(\Kf\Database\Criteria::create(\Kf\Database\Criteria::CONDITION_LIKE))
+                        ->setDatagridHeader(\Kf\View\Html\Datagrid\Header::create(3, 'Path', '25%'))
+                        ->setViewComponent(\Kf\View\Html\InputText::create('path', 'Path')
+                                ->setRequired(true)
+                                ->setPlaceholder('Path do Item de Acesso')));
     }
 
 }

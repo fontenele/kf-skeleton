@@ -5,7 +5,7 @@ namespace Admin\Controller;
 Class Auth extends \Kf\Module\Controller {
 
     public function init() {
-        
+
     }
 
     public function login() {
@@ -22,6 +22,10 @@ Class Auth extends \Kf\Module\Controller {
                         $gravatar = sprintf($gravatarUrl, md5($this->request->post->offsetGet('email')));
                         $user['photo'] = $gravatar;
                     }
+
+                    $serviceAccess = new \Admin\Service\AccessItem;
+                    $user['access'] = new \Kf\System\Collection($serviceAccess->listarItemsDeUserGroup($user['user_group']));
+                    $user['access']->sortBy('path');
                     $session->identity = $user;
                     \Kf\System\Messenger::success('Bem vindo ' . $this->request->post->offsetGet('email'));
                     $this->redirect(\Kf\Kernel::$router->default);

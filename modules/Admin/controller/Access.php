@@ -102,25 +102,28 @@ class Access extends \Kf\Module\Controller {
         $row = $this->request->post->getArrayCopy();
         $errors = 0;
         $data = [];
-
+        // Limpar items existentes
         $service->limparItemsDeSubmodulo($row['submodule']);
-
+        // Salvar items
         foreach ($row['access'] as $access => $items) {
             foreach ($items as $name) {
+                $action = explode('::', $name);
+                $controller = explode('\\', $action[0]);
+                $module = \Kf\System\String::camelToDash($controller[0]);
+                $controller = \Kf\System\String::camelToDash($controller[2]);
+                $action = \Kf\System\String::camelToDash($action[1]);
                 $accessItem = [
                     'cod' => '',
                     'name' => $name,
-                    'access' => $access
+                    'access' => $access,
+                    'path' => "{$module}/{$controller}/{$action}"
                 ];
-
                 if (!$service->save($accessItem)) {
                     $errors++;
                 }
-
                 $data[] = $accessItem;
             }
         }
-
         if (!$errors) {
             $this->view->message = "Items de Acesso salvos com sucesso.";
             $this->view->status = "success";

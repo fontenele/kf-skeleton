@@ -62,7 +62,7 @@ class UserGroup extends \Kf\Module\Controller {
      * @return string
      */
     public static function dgAccess($row) {
-        return '<a title="Ver Acessos" href="' . \Kf\Kernel::$router->basePath . 'admin/user-group/list-access/cod/' . $row['cod'] . '">Acessos</a>';
+        return '<a title="Ver Acessos" class="label label-default" href="' . \Kf\Kernel::$router->basePath . 'admin/user-group/list-access/cod/' . $row['cod'] . '">Acessos</a>';
     }
 
     /**
@@ -92,21 +92,6 @@ class UserGroup extends \Kf\Module\Controller {
         return '<a class="text-danger" title="Excluir grupo" data-confirmation data-placement="left" href="' . \Kf\Kernel::$router->basePath . "admin/user-group/delete-item/cod/{$row['cod']}\">" . \Kf\View\Html\Helper\Icon::get('times-circle-o') . '</a>';
     }
 
-    public function listAccess() {
-        $service = new \Admin\Service\UserGroup; // Service
-        $serviceItems = new \Admin\Service\AccessItem; // Service
-        $entity = new \Admin\Entity\UserGroup; // Entity
-        $pk = $entity->getPrimaryKey();
-        // Return if primary key wasnt setted
-        if (!$this->request->get->$pk) {
-            \Kf\System\Messenger::error("Erro ao tentar ver acessos do grupo pois nenhum grupo foi informado.");
-            $this->redirect('admin/user-group/list-items');
-        }
-        $this->view->userGroup = $service->findOneByCod($this->request->get->$pk);
-        $this->view->acessos = $serviceItems->listarItems();
-        return $this->view;
-    }
-
     public function deleteItem() {
         try {
             $service = new \Admin\Service\UserGroup; // Service
@@ -127,6 +112,44 @@ class UserGroup extends \Kf\Module\Controller {
             }
             // Redirect
             $this->redirect('admin/user-group/list-items');
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function listAccess() {
+        $service = new \Admin\Service\UserGroup; // Service
+        $serviceItems = new \Admin\Service\AccessItem; // Service
+        $entity = new \Admin\Entity\UserGroup; // Entity
+        $pk = $entity->getPrimaryKey();
+        // Return if primary key wasnt setted
+        if (!$this->request->get->$pk) {
+            \Kf\System\Messenger::error("Erro ao tentar ver acessos do grupo pois nenhum grupo foi informado.");
+            $this->redirect('admin/user-group/list-items');
+        }
+        $this->view->userGroup = $service->findOneByCod($this->request->get->$pk);
+        $this->view->acessos = $serviceItems->listarItems($this->view->userGroup['cod']);
+        return $this->view;
+    }
+
+    public function saveAccess() {
+        try {
+            $service = new \Admin\Service\AccessUserGroup; // Service
+            // Save
+            $post = $this->request->post->getArrayCopy(); // Post
+            $userGroup = $post['userGroup']; // userGroup cod
+            $service->delete(['user_group' => $userGroup]); // Clean access from this user group
+
+            foreach ($post['access'] as $access => $status) {
+                if ($status == 'on' || $status == 'true' || $status == '1') {
+                    $row = ['access' => $access, 'user_group' => $userGroup];
+                    $service->save($row);
+                }
+            }
+            // Set alert message
+            \Kf\System\Messenger::success("Acessos salvos com sucesso.");
+            // Redirect
+            $this->redirect("admin/user-group/list-access/cod/{$userGroup}");
         } catch (\Exception $ex) {
             throw $ex;
         }
